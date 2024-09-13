@@ -6,28 +6,28 @@ import matplotlib.pyplot as plt
 import folium
 from streamlit_folium import folium_static
 
-# Load the dataset
+
 data = pd.read_csv("bank_customer_churn_data.csv")
 
-# Handle NaN and infinite values
+
 data = data.replace([float('inf'), float('-inf')], pd.NA)
 data = data.dropna()
 
-# Sidebar for interactive filters
+# Sidebar
 st.sidebar.title("Interactive Filters")
 selected_country = st.sidebar.multiselect('Select Country', options=data['Geography'].unique(), default=data['Geography'].unique())
 min_age, max_age = st.sidebar.slider('Select Age Range', min_value=int(data['Age'].min()), max_value=int(data['Age'].max()), value=(20, 60))
 min_credit_score, max_credit_score = st.sidebar.slider('Select Credit Score Range', min_value=int(data['CreditScore'].min()), max_value=int(data['CreditScore'].max()), value=(400, 850))
 
-# Filter data based on selections
+# Filter 
 filtered_data = data[(data['Geography'].isin(selected_country)) & 
                      (data['Age'].between(min_age, max_age)) & 
                      (data['CreditScore'].between(min_credit_score, max_credit_score))]
 
-# Main Title
+
 st.title("Enhanced Bank Customer Churn Dashboard")
 
-# Display key metrics
+# key metrics
 st.subheader("Key Metrics")
 avg_credit_score = filtered_data['CreditScore'].mean()
 avg_age = filtered_data['Age'].mean()
@@ -56,10 +56,10 @@ fig_3d = px.scatter_3d(filtered_data, x='CreditScore', y='Age', z='NumOfProducts
                        labels={"CreditScore": "Credit Score", "Age": "Age", "NumOfProducts": "Number of Products"})
 st.plotly_chart(fig_3d)
 
-# Map Visualization with Layer Controls
+# Map Visualization 
 st.subheader("Layered Map: Customer Exit Rates, Credit Score, and Balance by Country")
 
-# Assign latitude and longitude for each country
+# latitude and longitude 
 country_coords = {
     'France': [46.603354, 1.888334],
     'Germany': [51.165691, 10.451526],
@@ -85,7 +85,7 @@ layer_balance = folium.FeatureGroup(name="Average Balance").add_to(m)
 for _, row in country_data.iterrows():
     coords = country_coords.get(row['Geography'], [0, 0])
     
-    # Exit Rate Layer
+    # Exit Rate 
     folium.CircleMarker(
         location=coords,
         radius=10 * row['Exited'],  # Size based on exit rate
@@ -95,7 +95,7 @@ for _, row in country_data.iterrows():
         popup=f"Country: {row['Geography']}\nExit Rate: {row['Exited']:.2%}"
     ).add_to(layer_exit_rate)
     
-    # Average Credit Score Layer
+    # Average Credit Score 
     folium.CircleMarker(
         location=coords,
         radius=10 * (row['CreditScore'] / 100),  # Size scaled by credit score
@@ -105,7 +105,7 @@ for _, row in country_data.iterrows():
         popup=f"Country: {row['Geography']}\nAvg Credit Score: {row['CreditScore']:.2f}"
     ).add_to(layer_credit_score)
     
-    # Average Balance Layer
+    # Average Balance 
     folium.CircleMarker(
         location=coords,
         radius=10 * (row['Balance'] / 50000),  # Size scaled by balance
@@ -115,10 +115,10 @@ for _, row in country_data.iterrows():
         popup=f"Country: {row['Geography']}\nAvg Balance: ${row['Balance']:,.2f}"
     ).add_to(layer_balance)
 
-# Add layer control to map
+
 folium.LayerControl().add_to(m)
 
-# Display the map in Streamlit
+
 folium_static(m)
 
 # Gender-based Analysis
