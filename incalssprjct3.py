@@ -14,7 +14,7 @@ data = data.replace([float('inf'), float('-inf')], pd.NA)
 data = data.dropna()
 
 # Sidebar
-st.sidebar.title("Interactive Filters")
+st.sidebar.title("PRJCT3 Interactive Filters")
 selected_country = st.sidebar.multiselect('Select Country', options=data['Geography'].unique(), default=data['Geography'].unique())
 min_age, max_age = st.sidebar.slider('Select Age Range', min_value=int(data['Age'].min()), max_value=int(data['Age'].max()), value=(20, 60))
 min_credit_score, max_credit_score = st.sidebar.slider('Select Credit Score Range', min_value=int(data['CreditScore'].min()), max_value=int(data['CreditScore'].max()), value=(400, 850))
