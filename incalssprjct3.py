@@ -25,7 +25,7 @@ filtered_data = data[(data['Geography'].isin(selected_country)) &
                      (data['CreditScore'].between(min_credit_score, max_credit_score))]
 
 
-st.title("Enhanced Bank Customer Churn Dashboard")
+st.title("Matty's Enhanced Bank Customer Churn Dashboard")
 
 # key metrics
 st.subheader("Key Metrics")
